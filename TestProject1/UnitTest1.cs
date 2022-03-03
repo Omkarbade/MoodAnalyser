@@ -10,30 +10,34 @@ namespace UnitTestProject1
         [TestCategory("Happy Mood")]
         public void GivenMessageShouldReturnHappy()
         {
-            ///AAA Methodology
-            ///Arrange
-            string message = "I am in Happy mood";
-            string expected = "happy";
-            MoodAnalyser moodAnalyser = new MoodAnalyser(message);
-
-            //Act
-            string actual = moodAnalyser.AnalyseMood();
-
-            //Assert
-            Assert.AreEqual(expected, actual);
+            //Follow AAA strategy
+            //Arrange , Act & last Assert
+            MoodAnalyser mood = new MoodAnalyser("Happy Mood");
+            string excepted = "happy";
+            var actual = mood.AnalyseMood();
+            Assert.AreEqual(excepted, actual);
         }
-
         [TestMethod]
-        [TestCategory("Sad Mood")]
-        public void GivenSadMessageReturnSadMood()
+        [TestCategory("SAD Mood")]
+        public void GivenMessageShouldReturnSad()
         {
-            ///AAA Methodology
-            ///Arrange
-            string message = "I am in Sad mood";
-            string expected = "sad";
-            MoodAnalyser moodAnalyser = new MoodAnalyser(message);
-            string actual = moodAnalyser.AnalyseMood();
-            Assert.AreEqual(expected, actual);
+            //Arrange , Act & Assert
+            MoodAnalyser mood = new MoodAnalyser("SAD Mood");
+            string excepted = "sad";
+            var actual = mood.AnalyseMood();
+            Assert.AreEqual(excepted, actual);
+        }
+        [TestMethod]
+        [TestCategory("Null Reference")]
+        public void GivenNullShouldReturnHappy()
+        {
+
+            //Arrange , Act and in last Assert
+            string? message = null;
+            MoodAnalyser mood = new MoodAnalyser(message);
+            string excepted = "happy";
+            var actual = mood.AnalyseMood();
+            Assert.AreEqual(excepted, actual);
         }
     }
 }
