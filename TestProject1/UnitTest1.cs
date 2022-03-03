@@ -29,16 +29,23 @@ namespace UnitTestProject1
             Assert.AreEqual(excepted, actual);
         }
         [TestMethod]
-        [TestCategory("Null Reference")]
-        public void GivenNullShouldReturnHappy()
+        [TestCategory("Null Exception")]
+        public void GivenNullShouldReturnCustomException()
         {
-
             //Arrange , Act and in last Assert
-            string? message = null;
-            MoodAnalyse mood = new MoodAnalyse(message);
-            string excepted = "happy";
-            var actual = mood.AnalyseMood();
-            Assert.AreEqual(excepted, actual);
+
+            string excepted = "Message can't be null";
+            try
+            {
+                MoodAnalyse mood = new MoodAnalyse(null);
+                string actual = mood.AnalyseMood();
+            }
+            catch (MoodAnalyserException ex)
+            {
+                Console.WriteLine("moodanalyser exception :" + ex);
+                Assert.AreEqual(excepted, ex.Message);
+            }
+
         }
         [TestMethod]
         [TestCategory("Empty Exception")]
@@ -57,6 +64,7 @@ namespace UnitTestProject1
                 Console.WriteLine("Mood anaylser Exception :" + ex);
                 Assert.AreEqual(excepted, ex.Message);
             }
+
         }
         [TestMethod]
         public void Given_MoodAnalyser_ClassName_ShouldReturn_MoodAnalyseObject()
@@ -97,27 +105,6 @@ namespace UnitTestProject1
                 Assert.AreEqual(expected, e.Message);
             }
         }
-        [TestMethod]
-        public void GivenMoodAnalyserWhenCorrectReturnMoodAnalyseObject()
-        {
-            object expected = new MoodAnalyse("HAPPY");
-            object obj = MoodAnalyserFactory.CreatedMoodAnalyserUsingParameterizedConstructor("MoodAnalyser.MoodAnalyse", "MoodAnalyse", "HAPPY");
-            expected.Equals(obj);
-        }
-
-        [TestMethod]
-        public void GivenInvalidClassNameShouldThrowMoodAnalyserExceptionOfParameterisedConstructor()
-        {
-            string expected = "Class not found";
-            try
-            {
-                object obj = MoodAnalyserFactory.CreatedMoodAnalyserUsingParameterizedConstructor("MoodAnalyser.sampleClass", "MoodAnalyse", "HAPPY");
-            }
-            catch (MoodAnalyserException e)
-            {
-                Assert.AreEqual(expected, e.Message);
-            }
-        }
 
         [TestMethod]
         public void GivenMoodAnalyser_WhenCorrect_Return_MoodAnalyseObject()
@@ -141,6 +128,9 @@ namespace UnitTestProject1
             }
         }
 
+        /// This test case is for
+        ///  Given Invalid constructor name should throw MoodAnalyserException.
+
         [TestMethod]
         public void GivenInvalidConstructorName_ShouldThrow_MoodAnalyserException_Of_ParameterizedConstructor()
         {
@@ -152,6 +142,30 @@ namespace UnitTestProject1
             catch (MoodAnalyserException e)
             {
                 Assert.AreEqual(expected, e.Message);
+            }
+        }
+
+        // Happy message passing using Reflection when correct
+        // should return HAPPY Mood
+        [TestMethod]
+        public void GivenHappyMessage_UsingReflection_IfCorrect_Should_ReturnHappy()
+        {
+            string message = MoodAnalyserFactory.InvokeMethod("MoodAnalyser.MoodAnalyse", "GetMood", "happy");
+            Assert.AreEqual("HAPPY", message);
+        }
+
+        // Given Happy message when incorrect method 
+        // should throw MoodAnalyserException
+        [TestMethod]
+        public void GivenHappyMessage_UsingReflection_WhenIncorrectMethod_shouldThrow_MoodAnayserException()
+        {
+            try
+            {
+                string message = MoodAnalyserFactory.InvokeMethod("MoodAnalyser.MoodAnalyse", "getMethod", "happy");
+            }
+            catch (MoodAnalyserException e)
+            {
+                Assert.AreEqual(MoodAnalyserException.ExceptionType.INVALID_INPUT, e.Message);
             }
         }
     }
