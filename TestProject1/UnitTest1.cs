@@ -1,10 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MoodAnalyser;
+using System;
 
 namespace UnitTestProject1
 {
     [TestClass]
-    public class MoodAnalyser
+    public class UnitTest1
     {
         [TestMethod]
         [TestCategory("Happy Mood")]
@@ -12,7 +13,7 @@ namespace UnitTestProject1
         {
             //Follow AAA strategy
             //Arrange , Act & last Assert
-            MoodAnalyser mood = new MoodAnalyser("Happy Mood");
+            MoodAnalyse mood = new MoodAnalyse("Happy Mood");
             string excepted = "happy";
             var actual = mood.AnalyseMood();
             Assert.AreEqual(excepted, actual);
@@ -22,7 +23,7 @@ namespace UnitTestProject1
         public void GivenMessageShouldReturnSad()
         {
             //Arrange , Act & Assert
-            MoodAnalyser mood = new MoodAnalyser("SAD Mood");
+            MoodAnalyse mood = new MoodAnalyse("SAD Mood");
             string excepted = "sad";
             var actual = mood.AnalyseMood();
             Assert.AreEqual(excepted, actual);
@@ -34,10 +35,28 @@ namespace UnitTestProject1
 
             //Arrange , Act and in last Assert
             string? message = null;
-            MoodAnalyser mood = new MoodAnalyser(message);
+            MoodAnalyse mood = new MoodAnalyse(message);
             string excepted = "happy";
             var actual = mood.AnalyseMood();
             Assert.AreEqual(excepted, actual);
+        }
+        [TestMethod]
+        [TestCategory("Empty Exception")]
+        public void GivenEmptyShouldReturnCustomException()
+        {
+            ///Arrange , Act and in last Assert
+
+            string excepted = "Message can't be Empty";
+            try
+            {
+                MoodAnalyse mood = new MoodAnalyse("");
+                string actual = mood.AnalyseMood();
+            }
+            catch (MoodAnalyserException ex)
+            {
+                Console.WriteLine("Mood anaylser Exception :" + ex);
+                Assert.AreEqual(excepted, ex.Message);
+            }
         }
     }
 }
